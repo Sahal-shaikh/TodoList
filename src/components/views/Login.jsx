@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import {
   Grid,
   Typography,
@@ -45,8 +46,11 @@ const Login = () => {
       }
 
       const data = await response.json();
-      // After successful login or signup
-      localStorage.setItem("userData", JSON.stringify(data));
+
+      // Store the JWT token
+      localStorage.setItem("token", data.token);
+      // Store user information
+      localStorage.setItem("user", JSON.stringify(data.user));
       console.log(data); // Handle successful login
 
       // Redirect to dashboard after successful login
@@ -56,35 +60,6 @@ const Login = () => {
       setError(error.message);
     }
   };
-
-  // const handleSubmit = async (email, password) => {
-  //   try {
-  //     const response = await fetch("/api/auth/login", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ email, password }),
-  //     });
-
-  //     const data = await response.json();
-
-  //     if (response.ok) {
-  //       // Store the user data and token in local storage
-  //       localStorage.setItem(
-  //         "userData",
-  //         JSON.stringify({ user: data.user, token: data.token })
-  //       );
-  //       // Navigate to the profile page or dashboard
-  //       navigate("/profile");
-  //     } else {
-  //       // Handle login error
-  //       console.error(data.message);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error logging in:", error);
-  //   }
-  // };
 
   const handleSignUp = () => {
     navigate("/signup");

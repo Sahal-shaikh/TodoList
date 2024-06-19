@@ -14,12 +14,15 @@ const TaskSchema = new Schema({
         enum: ['open', 'inprogress', 'done'],
         required: true
     },
-
     created: {
         type: String,
         required: true
     },
-
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    }
 });
 
 module.exports = mongoose.model('Task', TaskSchema);

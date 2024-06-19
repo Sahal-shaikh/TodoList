@@ -7,8 +7,13 @@ const useFetch = (url) => {
 	useEffect(() => {
 		const fetchData = async () => {
 			dispatch({ type: 'GET_TODOS_PENDING' });
+			const token = localStorage.getItem('token'); // Retrieve token from local storage
 			try {
-				const response = await fetch(url);
+				const response = await fetch(url, {
+					headers: {
+						'Authorization': `Bearer ${token}` // Include the token in headers
+					}
+				});
 				if (!response.ok) {
 					throw new Error('Network response was not ok');
 				}

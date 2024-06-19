@@ -1,5 +1,5 @@
 import React, { memo, useState } from "react";
-import { Grid, Typography, Divider, Menu, MenuItem, IconButton, Avatar, Snackbar, Alert } from "@mui/material";
+import { Grid, Typography, Divider, Menu, MenuItem, IconButton, Avatar } from "@mui/material";
 import Kanban from "./Kanban";
 import useStore from "../../hooks/useStore";
 import useFetch from "../../hooks/useFetch"; // Import the custom hook
@@ -48,6 +48,7 @@ const Dashboard = () => {
 		navigate("/login"); // For now, redirect to the login page
 		handleMenuClose();
 	};
+
 	return (
 		<Grid container className="todo-header">
 			<div className="mobile-device-responsive-header">
@@ -94,12 +95,30 @@ const Dashboard = () => {
 				<Divider sx={{ marginTop: 2, marginBottom: 2 }} />
 			</Grid>
 
-			<Grid container spacing={2}>
+			{/* <Grid container spacing={2}>
 				{filteredTodos.map((todo) => (
 					<Kanban key={todo._id} todo={todo} />
 				))}
+			</Grid> */}
+
+
+			<Grid container spacing={2}>
+				{filteredTodos.length > 0 ? (
+					filteredTodos.map((todo) => (
+						<Kanban key={todo._id} todo={todo} />
+					))
+				) : (
+					<Grid sx={{ display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'center', height: '70vh' }}>
+
+						<Typography variant="h6" component="h6" sx={{ textAlign: "center" }}>
+							No Task Available!
+						</Typography>
+					</Grid>
+				)}
 			</Grid>
+
 		</Grid>
 	);
 };
+
 export default memo(Dashboard);
