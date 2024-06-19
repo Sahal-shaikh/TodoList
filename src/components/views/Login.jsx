@@ -32,32 +32,19 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message);
-      }
-
-      const data = await response.json();
+      const response = await axios.post("/api/auth/login", formData);
+      const data = response.data;
 
       // Store the JWT token
       localStorage.setItem("token", data.token);
       // Store user information
       localStorage.setItem("user", JSON.stringify(data.user));
-      console.log(data); // Handle successful login
 
       // Redirect to dashboard after successful login
       navigate("/");
     } catch (error) {
       console.error("Login failed:", error);
-      setError(error.message);
+      setError(error.response?.data?.message || "Login failed");
     }
   };
 

@@ -5,7 +5,8 @@ const {
     getTaskById,
     createTask,
     updateTask,
-    deleteTask
+    deleteTask,
+    authenticateUser
 } = require('../controllers/taskController');
 
 // @route   GET /api/tasks

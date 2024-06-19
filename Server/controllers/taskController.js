@@ -3,6 +3,8 @@ const { format, parse } = require('date-fns');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+const secretKey = process.env.SECRET_KEY;
+
 // Middleware to authenticate user
 const authenticateUser = (req, res, next) => {
     const token = req.header('Authorization').replace('Bearer ', '');
@@ -11,7 +13,7 @@ const authenticateUser = (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.SECRET_KEY);
+        const decoded = jwt.verify(token, secretKey);
         req.user = decoded;
         next();
     } catch (error) {
@@ -19,17 +21,7 @@ const authenticateUser = (req, res, next) => {
     }
 };
 
-// Get all tasks
-// exports.getTasks = async (req, res) => {
-//     try {
-//         const tasks = await Task.find();
-//         res.json(tasks);
-//     } catch (err) {
-//         res.status(500).json({ error: err.message });
-//     }
-// };
-
-// Get task by ID
+exports.authenticateUser = authenticateUser;
 
 exports.getTasks = [authenticateUser, async (req, res) => {
     try {
@@ -40,53 +32,17 @@ exports.getTasks = [authenticateUser, async (req, res) => {
     }
 }];
 
-
-exports.getTaskById = async (req, res) => {
+exports.getTaskById = [authenticateUser, async (req, res) => {
     try {
         const task = await Task.findById(req.params.id);
-        if (!task) return res.status(404).json({ message: 'Task not found' });
+        if (!task || task.user.toString() !== req.user.id) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
         res.json(task);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-};
-
-// Create a new task
-
-// exports.createTask = async (req, res) => {
-//     const { title, description, status, created } = req.body;
-//     const getUserDetails = req
-
-//     if (!title || !status) {
-//         return res.status(400).json({ message: 'Title and status are required' });
-//     }
-
-//     // Parse and reformat the created date if it exists
-//     let formattedDate;
-//     if (created) {
-//         try {
-//             const parsedDate = parse(created, 'dd/MM/yyyy', new Date());
-//             formattedDate = format(parsedDate, 'dd/MM/yyyy'); // Ensure consistent format
-//         } catch (error) {
-//             return res.status(400).json({ message: 'Invalid date format' });
-//         }
-//     }
-
-//     const newTask = new Task({
-//         title,
-//         description,
-//         status,
-//         created: formattedDate || format(new Date(), 'dd/MM/yyyy') // Use formatted date or current date
-//     });
-
-//     try {
-//         const task = await newTask.save();
-//         res.status(201).json(task);
-//     } catch (err) {
-//         res.status(500).json({ error: err.message });
-//     }
-// };
-
+}];
 
 exports.createTask = [authenticateUser, async (req, res) => {
     const { title, description, status, created } = req.body;
@@ -120,34 +76,36 @@ exports.createTask = [authenticateUser, async (req, res) => {
     }
 }];
 
-exports.updateTask = async (req, res) => {
+exports.updateTask = [authenticateUser, async (req, res) => {
     const { title, description, status } = req.body;
 
     try {
         const task = await Task.findById(req.params.id);
-        if (!task) return res.status(404).json({ message: 'Task not found' });
+        if (!task || task.user.toString() !== req.user.id) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
 
         task.title = title || task.title;
         task.description = description || task.description;
         task.status = status || task.status;
 
         const updatedTask = await task.save();
-        res.json(updatedTask); // Make sure this is the last line to send the response
+        res.json(updatedTask);
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-};
+}];
 
-// Delete a task
-
-exports.deleteTask = async (req, res) => {
+exports.deleteTask = [authenticateUser, async (req, res) => {
     try {
         const task = await Task.findById(req.params.id);
-        if (!task) return res.status(404).json({ message: 'Task not found' });
+        if (!task || task.user.toString() !== req.user.id) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
 
         await Task.deleteOne({ _id: req.params.id });
         res.json({ message: 'Task removed' });
     } catch (err) {
         res.status(500).json({ error: err.message });
     }
-};
+}];

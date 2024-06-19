@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useNotification } from '../../hooks/notificationContext';
-
+import { fetchWithAuth } from '../../Utils/Auth'; // Add this import
 
 const Todo = () => {
 	const { state, dispatch } = useStore();
@@ -55,7 +55,7 @@ const Todo = () => {
 
 	const handleSave = async () => {
 		try {
-			const response = await fetch(`/api/tasks/edit/${formData._id}`, {
+			const response = await fetchWithAuth(`/api/tasks/edit/${formData._id}`, {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ const Todo = () => {
 	};
 
 	const handleBack = (e) => {
-		navigate("/")
+		navigate("/");
 	}
 
 	return (
@@ -159,7 +159,7 @@ const Todo = () => {
 						color="success"
 						onClick={handleBack}
 					>
-						Cancle
+						Cancel
 					</Button>
 				</Grid>
 			</Grid>
@@ -168,4 +168,3 @@ const Todo = () => {
 };
 
 export default memo(Todo);
-

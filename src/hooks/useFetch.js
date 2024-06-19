@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import useStore from './useStore';
+import { fetchWithAuth } from '../Utils/Auth';
 
 const useFetch = (url) => {
 	const { dispatch } = useStore();
@@ -7,13 +8,8 @@ const useFetch = (url) => {
 	useEffect(() => {
 		const fetchData = async () => {
 			dispatch({ type: 'GET_TODOS_PENDING' });
-			const token = localStorage.getItem('token'); // Retrieve token from local storage
 			try {
-				const response = await fetch(url, {
-					headers: {
-						'Authorization': `Bearer ${token}` // Include the token in headers
-					}
-				});
+				const response = await fetchWithAuth(url);
 				if (!response.ok) {
 					throw new Error('Network response was not ok');
 				}

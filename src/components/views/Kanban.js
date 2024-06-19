@@ -17,6 +17,7 @@ import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import useStore from '../../hooks/useStore';
 import { useNotification } from '../../hooks/notificationContext';
+import { fetchWithAuth } from '../../Utils/Auth'; // Add this import
 
 const Kanban = ({ todo }) => {
 	const { _id, title, description, status, created } = todo;
@@ -31,7 +32,7 @@ const Kanban = ({ todo }) => {
 	const handleDeleteClick = async (ev) => {
 		ev.stopPropagation();
 		try {
-			const response = await fetch(`/api/tasks/${_id}`, {
+			const response = await fetchWithAuth(`/api/tasks/${_id}`, {
 				method: 'DELETE',
 			});
 

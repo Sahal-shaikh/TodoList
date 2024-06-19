@@ -9,25 +9,45 @@ import TaskManager from './components/views/TaskManager';
 import Profile from './components/views/Profile';
 import Login from './components/views/Login';
 import Signup from './components/views/SignUp';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/views/ProtectedRoute';
 
 function App() {
 	return (
 		<StoreProvider>
 			<NotificationProvider>
-				<div className="App">
-					<BrowserRouter>
-						<Routes>
-							<Route path="/" element={<Layout />}>
-								<Route index element={<Dashboard />} />
-								<Route path="/edit/:id" element={<Todo />} />
-								<Route path="/AddItem/Form" element={<TaskManager />} />
-								<Route path='/account/profile' element={<Profile />} />
-								<Route path="/login" element={<Login />} />
-								<Route path="/signup" element={<Signup />} />
-							</Route>
-						</Routes>
-					</BrowserRouter>
-				</div>
+				<AuthProvider>
+					<div className="App">
+						<BrowserRouter>
+							<Routes>
+								<Route path="/" element={<Layout />}>
+									<Route index element={
+										<ProtectedRoute>
+											<Dashboard />
+										</ProtectedRoute>
+									} />
+									<Route path="/edit/:id" element={
+										<ProtectedRoute>
+											<Todo />
+										</ProtectedRoute>
+									} />
+									<Route path="/AddItem/Form" element={
+										<ProtectedRoute>
+											<TaskManager />
+										</ProtectedRoute>
+									} />
+									<Route path='/account/profile' element={
+										<ProtectedRoute>
+											<Profile />
+										</ProtectedRoute>
+									} />
+									<Route path="/login" element={<Login />} />
+									<Route path="/signup" element={<Signup />} />
+								</Route>
+							</Routes>
+						</BrowserRouter>
+					</div>
+				</AuthProvider>
 			</NotificationProvider>
 		</StoreProvider>
 	);

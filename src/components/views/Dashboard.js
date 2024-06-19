@@ -95,12 +95,6 @@ const Dashboard = () => {
 				<Divider sx={{ marginTop: 2, marginBottom: 2 }} />
 			</Grid>
 
-			{/* <Grid container spacing={2}>
-				{filteredTodos.map((todo) => (
-					<Kanban key={todo._id} todo={todo} />
-				))}
-			</Grid> */}
-
 
 			<Grid container spacing={2}>
 				{filteredTodos.length > 0 ? (

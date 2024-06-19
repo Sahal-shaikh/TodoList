@@ -55,7 +55,7 @@ const Signup = () => {
       localStorage.setItem("userData", JSON.stringify(data));
       console.log(data); // Handle successful signup
 
-      // Redirect to dashboard after successful signup
+      // Redirect to login after successful signup
       navigate("/login");
     } catch (error) {
       console.error("Signup failed:", error);

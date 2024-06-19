@@ -9,17 +9,6 @@ const TaskManager = () => {
   const { dispatch } = useStore();
   const showNotification = useNotification();
 
-  // const addTask = async (newTask) => {
-  //   try {
-  //     const response = await axios.post("/api/tasks", newTask);
-  //     dispatch({ type: "ADD_TODO", payload: response.data });
-  //     showNotification("Task added successfully", "success");
-  //   } catch (error) {
-  //     console.error("Error creating task:", error);
-  //     showNotification("Failed to add task", "error");
-  //   }
-  // };
-
   const addTask = async (newTask) => {
     const token = localStorage.getItem("token"); // Retrieve token
     try {
